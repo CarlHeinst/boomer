@@ -48,6 +48,20 @@ module.exports = (robot) ->
         console.log "Created #{config}"
         msg.send "Test File Complete - #{config}"
 
+      robot.respond /robot/i, (msg) ->
+        msg.send ('Outputting robot object to a file on the server.')
+        fs = require 'fs'
+        util = require 'util'
+        config = 'robot.JSON'
+        console.log "*****************************"
+        tidy = util.inspect(robot)
+        console.log (tidy)
+        ##fs.writeFile config, msg, (error ->
+        fs.writeFile config, tidy, (error) ->
+          console.error("Error writing file", error) if error
+        console.log "*****************************"
+        console.log "Created #{config}"
+        msg.send "Test File Complete - #{config}"
 
 
 
