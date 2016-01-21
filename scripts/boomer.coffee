@@ -9,19 +9,46 @@
 #   These are from the scripting documentation: https://github.com/github/hubot/blob/master/docs/scripting.md
 
 module.exports = (robot) ->
-
       robot.respond /mtr (.*)$/i, (msg) ->
         hostname = msg.match[1]
         hostname = hostname.replace(/http:\/\//, "")
         @exec = require('child_process').exec
         command = "mtr -rw #{hostname}"
-
         msg.send "generating mtr for #{hostname}..."
-
         @exec command, (error, stdout, stderr) ->
           msg.send error
           msg.send "```"+stdout+"```"
           msg.send "```"+stderr+"```"
+
+      robot.respond /trailer/i, (msg) ->
+        msg.send ('https://www.youtube.com/watch?v=sGbxmsDFVnE')
+
+      robot.respond /boom (.*)$/i, (msg) ->
+        reply = msg.match[0]
+        reply2 = msg.match[1]
+        msg.send "Hiya #{reply}, #{reply2}"
+
+      robot.respond /who/i, (msg) ->
+        reply = "I am: #{msg.robot.name} \n You are: \n Username: #{msg.message.user.name} \n Slack ID: #{msg.message.user.id} \n Slack Channel: #{msg.message.user.room}"
+
+        msg.send reply
+
+      robot.respond /output/i, (msg) ->
+        msg.send ('Outputting slack input to a file on the server.')
+        fs = require 'fs'
+        util = require 'util'
+        config = 'test.txt'
+        console.log "*****************************"
+        tidy = util.inspect(msg)
+        console.log (tidy)
+        ##fs.writeFile config, msg, (error ->
+        fs.writeFile config, tidy, (error) ->
+          console.error("Error writing file", error) if error
+        console.log "*****************************"
+        console.log "Created #{config}"
+        msg.send "Test File Complete - #{config}"
+
+
 
 
   # robot.hear /badger/i, (res) ->
